@@ -1,6 +1,6 @@
 import {} from '@typescript-eslint/utils';
 import * as fs from 'fs';
-import type { ESLint, Rule } from 'eslint';
+import type { ESLint, Linter, Rule } from 'eslint';
 import { preferTypeImport } from './preferTypeImport';
 
 const pkg = JSON.parse(
@@ -12,23 +12,20 @@ const plugin = {
     name: pkg.name,
     version: pkg.version,
   },
-  configs: {},
+  configs: {
+    recommended: {} as Linter.FlatConfig,
+  },
   rules: {
     'prefer-type-import': preferTypeImport as unknown as Rule.RuleModule,
   },
 } satisfies ESLint.Plugin;
 
-Object.assign(plugin.configs, {
-  recommended: [
-    {
-      plugins: {
-        'import-type-only': plugin,
-      },
-      rules: {
-        'prefer-type-import': ['error', 'type-fest'],
-      },
-    },
-  ],
+Object.assign(plugin.configs.recommended, {
+  name: pkg.name,
+  plugins: { [pkg.name]: plugin },
+  rules: {
+    'prefer-type-import': ['error', 'type-fest'],
+  },
 });
 
 // eslint-disable-next-line import/no-default-export
