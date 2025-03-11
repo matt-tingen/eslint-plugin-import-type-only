@@ -1,16 +1,11 @@
-import {} from '@typescript-eslint/utils';
-import * as fs from 'fs';
 import type { ESLint, Linter, Rule } from 'eslint';
+import { name, version } from '../package.json';
 import { preferTypeImport } from './preferTypeImport';
-
-const pkg = JSON.parse(
-  fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
-);
 
 const plugin = {
   meta: {
-    name: pkg.name,
-    version: pkg.version,
+    name,
+    version,
   },
   configs: {
     recommended: {} as Linter.FlatConfig,
@@ -21,8 +16,8 @@ const plugin = {
 } satisfies ESLint.Plugin;
 
 Object.assign(plugin.configs.recommended, {
-  name: pkg.name,
-  plugins: { [pkg.name]: plugin },
+  name,
+  plugins: { [name]: plugin },
   rules: {
     'prefer-type-import': ['error', 'type-fest'],
   },
