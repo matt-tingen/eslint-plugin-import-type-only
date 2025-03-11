@@ -1,10 +1,12 @@
 import type { ESLint, Linter, Rule } from 'eslint';
-import { name, version } from '../package.json';
+import { name as fullName, version } from '../package.json';
 import { preferTypeImport } from './preferTypeImport';
+
+const name = fullName.replace('eslint-plugin-', '');
 
 const plugin = {
   meta: {
-    name,
+    name: fullName,
     version,
   },
   configs: {
@@ -19,7 +21,7 @@ Object.assign(plugin.configs.recommended, {
   name,
   plugins: { [name]: plugin },
   rules: {
-    'prefer-type-import': ['error', 'type-fest'],
+    [`${name}/prefer-type-import`]: ['error', 'type-fest'],
   },
 });
 
